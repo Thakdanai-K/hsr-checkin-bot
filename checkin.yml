@@ -1,0 +1,27 @@
+name: HSR Daily Checkin
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # รันทุกวันเที่ยงคืน UTC (07:00 น. ไทย)
+  workflow_dispatch:     # รันเองได้ด้วยปุ่ม Run workflow
+
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run checkin script
+        run: python checkin.py
+        env:
+          COOKIE: ${{ secrets.COOKIE }}
+          UID: ${{ secrets.UID }}
